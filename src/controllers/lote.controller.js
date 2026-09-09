@@ -24,7 +24,7 @@ export const createLote = async (req, res) => {
     const loteData = req.body;
     try {
         const result = await loteService.createLote(loteData);
-        exito(res, "Lote creado correctamente", { id: result.insertId });
+        exito(res, "Lote creado correctamente", { id: result.insertId, ...loteData, finalizado: 0 }, 201);
     } catch (err) {
         error(res, "Error al crear lote", err);
     }
@@ -38,6 +38,16 @@ export const updateLote = async (req, res) => {
         exito(res, "Lote actualizado correctamente", { id });
     } catch (err) {
         error(res, `Error al actualizar lote con ID ${id}`, err);
+    }
+};
+
+export const finalizeLote = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await loteService.finalizeLote(id);
+        exito(res, "Lote finalizado correctamente", { id, finalizado: 1 });
+    } catch (err) {
+        error(res, `Error al finalizar lote con ID ${id}`, err);
     }
 };
 
