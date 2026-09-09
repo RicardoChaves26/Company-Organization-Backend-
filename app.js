@@ -4,6 +4,8 @@ import session from 'express-session';
 import expressMySQLSession from 'express-mysql-session';
 import pool from './src/config/database.js';
 
+import EncierroRoutes from './src/routes/encierro.routes.js';
+
 const app = express();
 
 app.use(cors({
@@ -37,6 +39,8 @@ app.use(session({
         maxAge: 86400000
     }
 }));
+
+app.use("/api/encierros", EncierroRoutes);
 
 app.get("/", (req, res) => {
     res.json({
