@@ -43,8 +43,6 @@ export const getLoteById = async (id) => {
 
 export const createLote = async (lote) => {
 
-    const finalizadoValor = lote.finalizado !== undefined ? lote.finalizado : 0;
-
     const [result] = await pool.query(
         `INSERT INTO lotes (
             encierro_id,
@@ -60,7 +58,7 @@ export const createLote = async (lote) => {
             lote.tipo,
             lote.cantidad,
             lote.precio,
-            finalizadoValor
+            0
         ]
     );
 
@@ -74,8 +72,7 @@ export const updateLote = async (id, lote) => {
             fecha = ?,
             tipo = ?,
             cantidad = ?,
-            precio = ?,
-            finalizado = ?
+            precio = ?
         WHERE id = ?`,
         [
             lote.encierro_id,
@@ -83,11 +80,18 @@ export const updateLote = async (id, lote) => {
             lote.tipo,
             lote.cantidad,
             lote.precio,
-            lote.finalizado,
             id
         ]
     );
 
+    return result;
+};
+
+export const finalizeLote = async (id) => {
+    const [result] = await pool.query(
+        `UPDATE lotes SET finalizado = 1 WHERE id = ?`,
+        [id]
+    );
     return result;
 };
 
