@@ -8,7 +8,7 @@ router.get("/", getLotes);
 router.get("/:id", getLoteById);
 router.post("/", loteValidator, createLote);
 router.put("/:id", loteValidator, updateLote);
-router.patch("/:id", loteValidator, finalizeLote);
+router.patch("/:id/finalizar", loteValidator, finalizeLote);
 router.delete("/:id", deleteLote);
 
 export default router;
