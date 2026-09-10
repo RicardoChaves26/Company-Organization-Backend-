@@ -84,6 +84,17 @@ export const updateAlimentacion = async (id, alimentacion) => {
     return result;
 };
 
+export const restarStock = async (inventarioId, cantidad, connection = pool) => {
+    const [result] = await connection.query(
+        `UPDATE inventario 
+        SET cantidad = cantidad - ? 
+        WHERE id = ? AND cantidad >= ?`,
+        [cantidad, inventarioId, cantidad]
+    );
+
+    return result.affectedRows > 0;
+};
+
 export const deleteAlimentacion = async (id) => {
     const [result] = await pool.query(
         `DELETE FROM alimentaciones WHERE id = ?`,

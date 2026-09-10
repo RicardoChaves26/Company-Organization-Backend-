@@ -24,9 +24,9 @@ export const createAlimentacion = async (req, res) => {
     const alimentacionData = req.body;
     try {
         const result = await alimentacionService.createAlimentacion(alimentacionData);
-        exito(res, "Alimentación creada correctamente", { id: result.insertId });
+        exito(res, "Alimentación creada correctamente", { id: result.insertId }, 201);
     } catch (err) {
-        error(res, "Error al crear alimentación", err);
+        error(res, err.message || "Error al crear alimentación", err, err.status || 500);
     }
 };
 
