@@ -37,8 +37,8 @@ INSERT INTO alimentaciones (fecha, hora, encierro_id, tipo, cantidad) VALUES
 -- ==========================================
 -- MANTENIMIENTOS (Prueba)
 -- ==========================================
-INSERT INTO mantenimientos (fecha, encierro_id, cantidad_sacos) VALUES 
-(CURDATE(), 1, 5);
+INSERT INTO mantenimientos (fecha, encierro_id, tipo, cantidad) VALUES 
+(CURDATE(), 1, 'Sacos Burrucha', 5.00);
 
 -- ==========================================
 -- VENTAS (Prueba)

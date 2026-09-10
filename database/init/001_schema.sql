@@ -75,7 +75,8 @@ CREATE TABLE IF NOT EXISTS mantenimientos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     fecha DATE NOT NULL,
     encierro_id INT NOT NULL,
-    cantidad_sacos INT NOT NULL,
+    tipo VARCHAR(100) NOT NULL,
+    cantidad DECIMAL(10,2) NOT NULL,
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (encierro_id) REFERENCES encierros(id) ON DELETE RESTRICT
 );
