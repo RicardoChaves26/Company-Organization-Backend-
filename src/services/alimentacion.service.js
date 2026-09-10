@@ -88,9 +88,76 @@ export const createAlimentacion = async (alimentacion) => {
 
 export const updateAlimentacion = async (id, alimentacionData) => {
 
-    await getAlimentacionById(id);
+    const { inventario_id, fecha, hora, encierro_id, tipo, cantidad: cantidadNueva } = alimentacionData;
+    const connection = await pool.getConnection();
 
-    return await alimentacionDao.updateAlimentacion(id, alimentacionData);
+    try {
+        await connection.beginTransaction();
+
+        const [alimentaciones] = await connection.query(
+            `SELECT 
+                id, 
+                cantidad 
+            FROM alimentaciones 
+            WHERE id = ?
+            FOR UPDATE`,
+            [id]
+        );
+
+        if (alimentaciones.length === 0) {
+            const error = new Error(`Alimentación con ID ${id} no encontrada`);
+            error.status = 404;
+            throw error;
+        }
+
+        const cantidadAnterior = Number(alimentaciones[0].cantidad);
+        const diferencia = cantidadNueva - cantidadAnterior;
+
+        const [rows] = await connection.query(
+            `SELECT id, tipo, unidad, cantidad FROM inventario WHERE id = ? FOR UPDATE`,
+            [inventario_id]
+        );
+
+        if (rows.length === 0) {
+            const error = new Error(`Inventario con ID ${inventario_id} no encontrado`);
+            error.status = 404;
+            throw error;
+        }
+
+        const producto = rows[0];
+
+        if (diferencia > 0 && producto.cantidad < diferencia) {
+            const error = new Error(
+                `Stock insuficiente para el ajuste. Disponible: ${producto.cantidad} ${producto.unidad}, Necesario extra: ${diferencia} ${producto.unidad}`
+            );
+            error.status = 400;
+            throw error;
+        }
+
+        await connection.query(
+            `UPDATE alimentaciones 
+             SET fecha = ?, hora = ?, encierro_id = ?, tipo = ?, cantidad = ?
+             WHERE id = ?`,
+            [fecha, hora, encierro_id, tipo || producto.tipo, cantidadNueva, id]
+        );
+
+        await connection.query(
+            `UPDATE inventario 
+             SET cantidad = cantidad - ? 
+             WHERE id = ?`,
+            [diferencia, inventario_id]
+        );
+
+        await connection.commit();
+        return { id, ...alimentacionData };
+
+    } catch (err) {
+        await connection.rollback();
+        throw err;
+    } finally {
+        connection.release();
+    }
+
 };
 
 export const deleteAlimentacion = async (id) => {
