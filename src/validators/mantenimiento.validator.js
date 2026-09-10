@@ -12,7 +12,7 @@ export const mantenimientoValidator = [
         .withMessage('El ID del encierro es obligatorio')
         .isInt({ min: 1 })
         .withMessage('El ID del encierro debe ser un número entero positivo'),
-    body('cantidad_sacos')
+    body('cantidad')
         .notEmpty()
         .withMessage('La cantidad es obligatoria')
         .isFloat({ min: 0.01 })
