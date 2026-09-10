@@ -8,6 +8,7 @@ import EncierroRoutes from './src/routes/encierro.routes.js';
 import LoteRoutes from './src/routes/lote.routes.js';
 import InventarioRoutes from './src/routes/inventario.routes.js';
 import AlimentacionRoutes from './src/routes/alimentacion.routes.js';
+import MantenimientoRoutes from "./src/routes/mantenimiento.routes.js";
 
 const app = express();
 
@@ -46,7 +47,8 @@ app.use(session({
 app.use("/api/encierros", EncierroRoutes);
 app.use("/api/lotes", LoteRoutes);
 app.use("/api/inventario", InventarioRoutes);
-app.use("/api/alimentaciones", AlimentacionRoutes);
+app.use("/api/alimentacion", AlimentacionRoutes);
+app.use("/api/mantenimiento", MantenimientoRoutes)
 
 app.get("/", (req, res) => {
     res.json({
