@@ -161,8 +161,65 @@ export const updateAlimentacion = async (id, alimentacionData) => {
 };
 
 export const deleteAlimentacion = async (id) => {
+    const connection = await pool.getConnection();
 
-    await getAlimentacionById(id);
+    try {
+        await connection.beginTransaction();
 
-    return await alimentacionDao.deleteAlimentacion(id);
+        const [alimentaciones] = await connection.query(
+            `SELECT 
+                id, 
+                cantidad, 
+                tipo 
+            FROM alimentaciones 
+            WHERE id = ?
+            FOR UPDATE`,
+            [id]
+        );
+
+        if (alimentaciones.length === 0) {
+            const error = new Error(`Alimentación con ID ${id} no encontrada`);
+            error.status = 404;
+            throw error;
+        }
+
+        const alimentacionAEliminar = alimentaciones[0];
+        const cantidadADevolver = Number(alimentacionAEliminar.cantidad);
+
+        const [rows] = await connection.query(
+            `SELECT
+                id, 
+                cantidad 
+            FROM inventario 
+            WHERE tipo = ? 
+            FOR UPDATE`,
+            [alimentacionAEliminar.tipo]
+        );
+
+        if (rows.length > 0) {
+            const inventarioId = rows[0].id;
+
+            await connection.query(
+                `UPDATE inventario 
+                 SET cantidad = cantidad + ? 
+                 WHERE id = ?`,
+                [cantidadADevolver, inventarioId]
+            );
+        }
+
+        await connection.query(
+            `DELETE FROM alimentaciones 
+            WHERE id = ?`,
+            [id]
+        );
+
+        await connection.commit();
+        return { id, mensaje: "Registro eliminado e inventario reabastecido" };
+
+    } catch (err) {
+        await connection.rollback();
+        throw err;
+    } finally {
+        connection.release();
+    }
 };
