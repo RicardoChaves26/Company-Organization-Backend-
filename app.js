@@ -7,6 +7,7 @@ import pool from './src/config/database.js';
 import EncierroRoutes from './src/routes/encierro.routes.js';
 import LoteRoutes from './src/routes/lote.routes.js';
 import InventarioRoutes from './src/routes/inventario.routes.js';
+import AlimentacionRoutes from './src/routes/alimentacion.routes.js';
 
 const app = express();
 
@@ -45,6 +46,7 @@ app.use(session({
 app.use("/api/encierros", EncierroRoutes);
 app.use("/api/lotes", LoteRoutes);
 app.use("/api/inventario", InventarioRoutes);
+app.use("/api/alimentaciones", AlimentacionRoutes);
 
 app.get("/", (req, res) => {
     res.json({
