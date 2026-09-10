@@ -9,7 +9,8 @@ import LoteRoutes from './src/routes/lote.routes.js';
 import InventarioRoutes from './src/routes/inventario.routes.js';
 import AlimentacionRoutes from './src/routes/alimentacion.routes.js';
 import MantenimientoRoutes from "./src/routes/mantenimiento.routes.js";
-import FleteRouter from "./src/routes/flete.routes.js";
+import VentaRoutes from "./src/routes/venta.routes.js";
+import FleteRoutes from "./src/routes/flete.routes.js";
 
 const app = express();
 
@@ -50,7 +51,8 @@ app.use("/api/lotes", LoteRoutes);
 app.use("/api/inventario", InventarioRoutes);
 app.use("/api/alimentacion", AlimentacionRoutes);
 app.use("/api/mantenimiento", MantenimientoRoutes);
-app.use("/api/flete", FleteRouter);
+app.use("/api/venta", VentaRoutes);
+app.use("/api/flete", FleteRoutes);
 
 app.get("/", (req, res) => {
     res.json({
