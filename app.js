@@ -11,6 +11,7 @@ import AlimentacionRoutes from './src/routes/alimentacion.routes.js';
 import MantenimientoRoutes from "./src/routes/mantenimiento.routes.js";
 import VentaRoutes from "./src/routes/venta.routes.js";
 import FleteRoutes from "./src/routes/flete.routes.js";
+import UsuarioRoutes from "./src/routes/usuario.routes.js";
 
 const app = express();
 
@@ -53,6 +54,7 @@ app.use("/api/alimentacion", AlimentacionRoutes);
 app.use("/api/mantenimiento", MantenimientoRoutes);
 app.use("/api/venta", VentaRoutes);
 app.use("/api/flete", FleteRoutes);
+app.use("/api/usuario", UsuarioRoutes);
 
 app.get("/", (req, res) => {
     res.json({
