@@ -39,6 +39,16 @@ export const getUsuarioById = async (id) => {
     return rows[0];
 };
 
+export const getUsuarioByUsername = async (usuario) => {
+    const query = `
+        SELECT id, nombre, telefono, correo, usuario, password 
+        FROM usuarios 
+        WHERE usuario = ?
+    `;
+    const [rows] = await pool.query(query, [usuario]);
+    return rows[0];
+};
+
 export const createUsuario = async (usuario) => {
     const [result] = await pool.query(
         `INSERT INTO usuarios (
